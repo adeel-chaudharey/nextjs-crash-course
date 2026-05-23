@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Schibsted_Grotesk,Martian_Mono} from "next/font/google";
+import { Schibsted_Grotesk, Martian_Mono } from "next/font/google";
 import "./globals.css";
 
 const schibstedGrotesk = Schibsted_Grotesk({
@@ -7,14 +7,14 @@ const schibstedGrotesk = Schibsted_Grotesk({
   subsets: ["latin"],
 });
 
-const martianmono = Martian_Mono({
+const martianMono = Martian_Mono({
   variable: "--font-martian-mono",
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
   title: "DevEvent",
-  description: "The HUb for Every Event you Mustn't Miss",
+  description: "The Hub for Every Event you Mustn't Miss",
 };
 
 export default function RootLayout({
@@ -25,7 +25,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${schibstedGrotesk.variable} ${martianmono.variable} min-h-screen antialiased`}
+      className={`${schibstedGrotesk.variable} ${martianMono.variable} min-h-screen antialiased`}
     >
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
