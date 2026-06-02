@@ -1,0 +1,90 @@
+name: CI/CD Pipeline - Next.js App
+
+# =========================
+# WHEN THIS RUNS
+# =========================
+on:
+  push:
+    branches:
+      - main   # jab bhi main branch pe push hoga
+
+# =========================
+# JOBS (STEPS RUN INSIDE VM)
+# =========================
+jobs:
+  build-test-deploy:
+    runs-on: ubuntu-latest  # GitHub temporary Linux machine
+
+    steps:
+
+    # =========================
+    # 1. GET CODE FROM REPO
+    # =========================
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    # =========================
+    # 2. SETUP NODE ENVIRONMENT
+    # =========================
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    # =========================
+    # 3. INSTALL DEPENDENCIES
+    # =========================
+    - name: Install dependencies
+      run: npm install
+
+    # =========================
+    # 4. RUN TESTS (CI PART)
+    # =========================
+    # If tests fail → pipeline stops here
+    - name: Run tests
+      run: npm run test
+
+    # =========================
+    # 5. BUILD APPLICATION
+    # =========================
+    # Ensures production build works
+    - name: Build Next.js app
+      run: npm run build
+
+    # =========================
+    # 6. BUILD DOCKER IMAGE
+    # =========================
+    - name: Build Docker image
+      run: |
+        docker build -t nextjs-app:latest .
+
+    # =========================
+    # 7. LOGIN TO AWS (via SSH)
+    # =========================
+    - name: Deploy to AWS EC2
+      uses: appleboy/ssh-action@v1.0.3
+      with:
+        host: ${{ secrets.AWS_HOST }}       # EC2 public IP
+        username: ${{ secrets.AWS_USER }}   # usually ubuntu
+        key: ${{ secrets.AWS_SSH_KEY }}     # private key (.pem)
+
+        # =========================
+        # 8. DEPLOY COMMANDS ON SERVER
+        # =========================
+        script: |
+          echo "Pulling latest code..."
+          cd /home/ubuntu/app || git clone https://github.com/YOUR_REPO.git app
+          cd app
+          git pull origin main
+
+          echo "Building Docker image on server..."
+          docker build -t nextjs-app .
+
+          echo "Stopping old container..."
+          docker stop nextjs-app || true
+          docker rm nextjs-app || true
+
+          echo "Starting new container..."
+          docker run -d -p 3000:3000 --name nextjs-app nextjs-app
+
+          echo "Deployment successful 🚀"

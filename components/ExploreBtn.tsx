@@ -1,9 +1,35 @@
 'use client';
 
+import Image from 'next/image';
+
 const ExploreBtn = () => {
   return (
-    <button type="button" id="clkbtn className="mt-7 onClick={() => console.log('we have jsutclicked a buttonn')}> Explore Button</button>
-  )
-}
 
-export default ExploreBtn
+   <button
+      className="block mt-7 mx-auto p-10"
+      onClick={() => console.log('clicked')}
+    > 
+    
+    
+    
+    
+     <a href="#events">
+      
+        
+        Explore Events
+
+        <Image src="./public/icons/arrow-down.svg" alt="arrow down" width={24} height={24}/>
+
+      </a>
+    
+    
+    
+    
+    
+    </button>
+     
+  
+  );
+};
+
+export default ExploreBtn;
