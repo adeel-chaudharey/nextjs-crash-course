@@ -1,4 +1,4 @@
-import ExploreBtn from "@/components/ExploreBtn"
+
 
 const MainPage = () => {
   return (
@@ -8,7 +8,7 @@ const MainPage = () => {
         <p className="text-center mt-5">
           hackathons , Meetups and Conferences , all in one place
           </p>      
-         <ExploreBtn />
+         
     </section>
   )
 }
